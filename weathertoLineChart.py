@@ -25,5 +25,3 @@ def weathertoLineChart(filename):
 
     return plt
 
-flg = weathertoLineChart("data/seattle-weather.csv")
-flg.show()

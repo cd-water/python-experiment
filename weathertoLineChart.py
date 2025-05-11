@@ -25,7 +25,7 @@ def weathertoLineChart(filename,start_time = '2012-01-01',end_time = '2012-01-31
 
     start = start_time.split('-')[0] + '年' + str(int(start_time.split('-')[1])) + '月' + str(int(start_time.split('-')[2])) + '日'
     end = end_time.split('-')[0] + '年' + str(int(end_time.split('-')[1])) + '月' + str(int(end_time.split('-')[2])) + '日'
-    plt.title("某地" + start + "至" + end + "最高最低气温折线图",fontsize=14)
+    plt.title("西雅图" + start + "至" + end + "最高最低气温折线图",fontsize=14)
     plt.xlabel("日期",fontsize=12,loc='right')
     count = 0
     t = 0

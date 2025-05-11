@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 def weather_predict(key='temp_max'):
     # 1. 数据加载与预处理
-    df = pd.read_csv('seattle-weather.csv', parse_dates=['date'], index_col='date')
+    df = pd.read_csv('data/seattle-weather.csv', parse_dates=['date'], index_col='date')
     df = df[[key, 'precipitation', 'wind']]  # 选择主要特征
     df = df.resample('D').mean().ffill()  # 处理缺失日期
 

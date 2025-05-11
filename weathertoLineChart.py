@@ -39,7 +39,7 @@ def weathertoLineChart(filename,start_time = '2012-01-01',end_time = '2012-01-31
             t_list.append(t)
             t += 5
     plt.xticks(t_list,x_list)
-    plt.ylabel("气温",fontsize=12,loc='top')
+    plt.ylabel("温度 (°C)",fontsize=12,loc='top')
     plt.legend(loc='best')
 
     return plt

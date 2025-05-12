@@ -1,8 +1,10 @@
 #该文件将文件特定列数据转化为条形、饼状、折线统计图
+#折线可以绘制出所有的数据
 import matplotlib.pyplot as plt
 from collections import Counter
 import plotly.express as px
 from datatolist import csvtolist
+import plotly.express as px
 
 
 #该函数统计指定列数的数据
@@ -81,10 +83,9 @@ def img_tiaoxing(list1, index):
 #     plt.show()
 
 
-
 def img_zhexian_plotly(data, index):
     """
-    使用 Plotly 绘制指定列的交互式折线图
+    使用 Plotly 绘制指定列的交互式折线图，并显示每个点对应的日期
 
     参数：
     data：二维列表（第一行为标题）
@@ -92,10 +93,9 @@ def img_zhexian_plotly(data, index):
     """
 
     try:
-        # 获取标题名
-        title_col = data[0][index]
-        # 获取数值数据，跳过表头
-        y_data = [float(row[index]) for row in data[1:]]
+        title_col = data[0][index]  # 取目标列的标题
+        y_data = [float(row[index]) for row in data[1:]]  # 提取 y 轴数据
+        date_data = [row[0] for row in data[1:]]  # 默认第一列为日期
     except ValueError:
         print("指定列中包含非数值内容，无法绘制折线图")
         return
@@ -103,15 +103,13 @@ def img_zhexian_plotly(data, index):
         print("列索引超出范围")
         return
 
-    x_data = list(range(1, len(y_data) + 1))  # 行号作为 x 轴
-
     fig = px.line(
-        x=x_data,
+        x=date_data,
         y=y_data,
-        labels={'x': '行号', 'y': '值'},
+        labels={'x': '日期', 'y': '值'},
         title=f"'{title_col}' 列的交互式折线图"
     )
-    fig.update_traces(mode='lines+markers')  # 显示线和点
+    fig.update_traces(mode='lines+markers', hovertemplate='日期: %{x}<br>值: %{y}<extra></extra>')
     fig.update_layout(width=900, height=500)
     fig.show()
 

@@ -102,5 +102,3 @@ def weather_choose_line(filename,start_time = '2022-01-01',end_time = '2022-01-3
     plt.legend(loc='best')
 
     return plt
-
-weather_choose_line("./data/seattle-weather.csv",start_time = '2022-01-01',end_time = '2022-01-31',index = "temp_max").show()

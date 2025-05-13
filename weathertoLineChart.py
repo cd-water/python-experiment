@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import datatolist
 import dataclean
-def weathertoLineChart(filename = "seattle-weather.csv",start_time = '2022-01-01',end_time = '2022-01-31'):
+def weathertoLineChart(filename = "./data/seattle-weather.csv",start_time = '2022-01-01',end_time = '2022-01-31'):
     dl = datatolist.datatolist((filename))
     dl = dataclean.weather_clean_MainCode(dl,start_time,end_time)  #进行数据清洗，将日期为空或者不符合格式的日期去除
     dl = dataclean.weather_clean_data(dl,2)                   #将最高气温中缺失的数据由平均值代替

@@ -45,6 +45,7 @@ def weathertoLineChart(filename = "./data/seattle-weather.csv",start_time = '202
 
 def weather_choose_line(filename,start_time = '2022-01-01',end_time = '2022-01-31',index = 'precipitation'):
     dl = datatolist.datatolist((filename))
+    index = str(dl[0].index(index))
     dl = dataclean.weather_clean_MainCode(dl, start_time, end_time)  # 进行数据清洗，将日期为空或者不符合格式的日期去除
     dl = dataclean.weather_clean_data(dl, int(index))
 
@@ -57,19 +58,19 @@ def weather_choose_line(filename,start_time = '2022-01-01',end_time = '2022-01-3
     y_label = ""
     line_label = ""
     color = ""
-    if index == 'precipitation':
+    if index == '1':
         y_label = "毫米（mm）"
         line_label = "降水量"
         color = "skyblue"
-    elif index == 'temp_max':
+    elif index == '2':
         y_label = "气温（℃）"
         line_label = "最高气温"
         color = "red"
-    elif index == 'temp_min':
+    elif index == '3':
         y_label = "气温（℃）"
         line_label = "最低气温"
         color = "blue"
-    elif index == 'wind':
+    elif index == '4':
         y_label = "风速（m/s）"
         line_label = "风力大小"
         color = "steelblue"
@@ -101,3 +102,5 @@ def weather_choose_line(filename,start_time = '2022-01-01',end_time = '2022-01-3
     plt.legend(loc='best')
 
     return plt
+
+weather_choose_line("./data/seattle-weather.csv",start_time = '2022-01-01',end_time = '2022-01-31',index = "temp_max").show()

@@ -1,13 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
-
-# 导入数据处理模块并重命名，避免命名冲突
-import datatolist as data_utils
+import datatolist as data_util
 
 # 配置matplotlib支持中文显示
 plt.rcParams["font.family"] = ["SimHei"]
-plt.rcParams["axes.unicode_minus"] = False
+plt.rcParams["axes.unicode_minus"] = False  # 正确显示负号
+
 
 
 def classify_weather(weather_data, start_date=None, end_date=None):
@@ -46,20 +45,20 @@ def classify_weather(weather_data, start_date=None, end_date=None):
         # 基于多条件的智能天气分类
         weather_type = None
 
-        # 调整后的极端天气判断 (优先级最高)
-        if temp_max is not None and temp_max >= 33:  # 降低酷暑阈值
+        # 极端天气判断 (优先级最高)
+        if temp_max is not None and temp_max >= 33:
             if 'sun' in weather:
                 weather_type = '酷暑'
             elif 'cloud' in weather:
                 weather_type = '闷热'
 
-        if precipitation is not None and precipitation > 25:  # 降低暴雨阈值
-            if wind is not None and wind > 7:  # 降低暴风雨风速阈值
+        if precipitation is not None and precipitation > 25:
+            if wind is not None and wind > 7:
                 weather_type = '暴风雨'
             else:
                 weather_type = '暴雨'
 
-        if wind is not None and wind > 12:  # 降低大风阈值
+        if wind is not None and wind > 12:
             weather_type = '大风'
 
         # 常规天气判断
@@ -104,11 +103,12 @@ def classify_weather(weather_data, start_date=None, end_date=None):
 
 
 def plot_pie_chart(weather_classification, title="天气类型占比饼状图"):
+    """绘制带图例的饼状图"""
     # 合并数量较少的类别以提高可读性
     filtered_classes = weather_classification.copy()
-    threshold = max(1, len(weather_classification) * 0.05)  # 小于5%的类别合并
+    threshold = max(1, len(weather_classification) * 0.03)  # 小于3%的类别合并
 
-    if len(weather_classification) > 5:
+    if len(weather_classification) > 6:
         other_count = 0
         for wc, count in list(filtered_classes.items()):
             if count < threshold:
@@ -120,26 +120,82 @@ def plot_pie_chart(weather_classification, title="天气类型占比饼状图"):
     labels = list(filtered_classes.keys())
     sizes = list(filtered_classes.values())
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    # 定义每种天气类型的颜色
+    colors = {
+        '晴天': '#FFD700',  # 金色
+        '晴热': '#FF4500',  # 橙红色
+        '晴冷': '#87CEEB',  # 天蓝色
+        '晴朗': '#FFFF00',  # 黄色
+        '雨天': '#1E90FF',  # 道奇蓝
+        '小雨': '#6495ED',  # 玉米花蓝
+        '中雨': '#4169E1',  # 皇家蓝
+        '大雨': '#0000CD',  # 中蓝色
+        '暴雨': '#00008B',  # 深蓝色
+        '暴风雨': '#4B0082',  # 靛蓝色
+        '阴天': '#A9A9A9',  # 暗灰色
+        '阴冷': '#696969',  # 深灰色
+        '下雪': '#F0FFFF',  # 雪白
+        '大风': '#D3D3D3',  # 浅灰色
+        '酷暑': '#FF0000',  # 红色
+        '闷热': '#CD5C5C',  # 印度红
+        '其他': '#808080'  # 灰色
+    }
+
+    # 按标签顺序获取颜色
+    pie_colors = [colors.get(label, '#808080') for label in labels]
+
+    fig, ax = plt.subplots(figsize=(12, 8))
     wedges, texts, autotexts = ax.pie(
-        sizes, labels=labels, autopct='%1.1f%%',
-        startangle=140, textprops={'fontsize': 12}
+        sizes, colors=pie_colors, autopct='%1.1f%%',
+        startangle=140, textprops={'fontsize': 10},
+        wedgeprops={'edgecolor': 'w', 'linewidth': 1}
     )
 
+    # 添加图例（将图例放在右侧）
+    ax.legend(wedges, labels, title="天气类型",
+              loc="center left",
+              bbox_to_anchor=(1, 0, 0.5, 1),
+              fontsize=12)
+
     ax.set_title(title, fontsize=16)
-    ax.axis('equal')
+    ax.axis('equal')  # 保证饼图是圆的
 
     plt.tight_layout()
-    plt.savefig('weather_pie_chart.png', dpi=300)
+    plt.savefig('weather_pie_chart.png', dpi=300, bbox_inches='tight')
     print("饼状图已保存为 weather_pie_chart.png")
 
 
 def plot_bar_chart(weather_classification, title="天气类型天数条形图"):
+    """绘制带标签的条形图"""
     labels = list(weather_classification.keys())
     sizes = list(weather_classification.values())
 
-    fig, ax = plt.subplots(figsize=(12, 6))
-    bars = ax.bar(labels, sizes, color='skyblue')
+    # 定义每种天气类型的颜色（与饼图保持一致）
+    colors = {
+        '晴天': '#FFD700',  # 金色
+        '晴热': '#FF4500',  # 橙红色
+        '晴冷': '#87CEEB',  # 天蓝色
+        '晴朗': '#FFFF00',  # 黄色
+        '雨天': '#1E90FF',  # 道奇蓝
+        '小雨': '#6495ED',  # 玉米花蓝
+        '中雨': '#4169E1',  # 皇家蓝
+        '大雨': '#0000CD',  # 中蓝色
+        '暴雨': '#00008B',  # 深蓝色
+        '暴风雨': '#4B0082',  # 靛蓝色
+        '阴天': '#A9A9A9',  # 暗灰色
+        '阴冷': '#696969',  # 深灰色
+        '下雪': '#F0FFFF',  # 雪白
+        '大风': '#D3D3D3',  # 浅灰色
+        '酷暑': '#FF0000',  # 红色
+        '闷热': '#CD5C5C',  # 印度红
+        '其他': '#808080'  # 灰色
+    }
+
+    # 按标签顺序获取颜色
+    bar_colors = [colors.get(label, '#808080') for label in labels]
+
+    fig, ax = plt.subplots(figsize=(14, 7))
+    bars = ax.bar(labels, sizes, color=bar_colors)
 
     ax.set_xlabel('天气类型', fontsize=14)
     ax.set_ylabel('天数', fontsize=14)
@@ -148,7 +204,7 @@ def plot_bar_chart(weather_classification, title="天气类型天数条形图"):
     # 为每个条形添加数值标签
     for bar in bars:
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2., height,
+        ax.text(bar.get_x() + bar.get_width() / 2., height + 0.5,
                 f'{height}', ha='center', va='bottom', fontsize=12)
 
     # 旋转x轴标签避免重叠
@@ -192,17 +248,25 @@ def get_valid_date(prompt):
             print("日期格式错误，请使用YYYY-MM-DD格式！")
 
 
-# 主程序
-if __name__ == "__main__":
-    # 假设你的文件名为seattle-weather.csv
-    filename = 'seattle-weather.csv'
+def classify():
+    filename = input("请输入数据文件名 (默认: seattle-weather.csv): ")
+    if not filename.strip():
+        filename = 'seattle-weather.csv'
 
-    # 使用重命名后的模块调用函数
-    data = data_utils.datatolist(filename)
+    # 读取数据
+    data = data_util.datatolist(filename)
 
     if not data:
         print(f"无法读取文件: {filename}")
         print("请检查文件路径和格式是否正确。")
+        exit()
+
+    # 检查数据列完整性
+    headers = data[0]
+    required_columns = ['date', 'weather']
+    missing_columns = [col for col in required_columns if col not in headers]
+    if missing_columns:
+        print(f"错误：数据缺少必要的列: {', '.join(missing_columns)}")
         exit()
 
     # 获取用户输入的日期范围
@@ -236,3 +300,4 @@ if __name__ == "__main__":
     plot_bar_chart(weather_class, f"不同天气类型天数条形图{title_suffix}")
 
     print("数据处理和可视化完成！")
+    

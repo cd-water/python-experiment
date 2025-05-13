@@ -1,8 +1,6 @@
 * 前端项目配置，如果vscode上面没安装相关插件，可以试着导入给的配置文件（电脑上面还有装一下node.js跑npm脚本）
 
-![image-20250513214555043](C:\Users\CD_water\AppData\Roaming\Typora\typora-user-images\image-20250513214555043.png)
-
-
+![image-20250513214555043](https://github.com/user-attachments/assets/dc843557-7c17-4dbd-8019-83a5fe0be6cd)
 
 
 
@@ -16,4 +14,4 @@ vscode上运行npm脚本上的dev，点开终端的url就能打开了
 
 下运行npm install
 
-![image-20250513215111269](C:\Users\CD_water\AppData\Roaming\Typora\typora-user-images\image-20250513215111269.png)
+![image-20250513215111269](https://github.com/user-attachments/assets/60a2ebff-6d10-4866-87c4-e8946efa1467)

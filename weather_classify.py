@@ -248,19 +248,7 @@ def get_valid_date(prompt):
             print("日期格式错误，请使用YYYY-MM-DD格式！")
 
 
-def classify():
-    filename = input("请输入数据文件名 (默认: seattle-weather.csv): ")
-    if not filename.strip():
-        filename = 'seattle-weather.csv'
-
-    # 读取数据
-    data = data_util.datatolist(filename)
-
-    if not data:
-        print(f"无法读取文件: {filename}")
-        print("请检查文件路径和格式是否正确。")
-        exit()
-
+def classify(data, start_date=None, end_date=None):
     # 检查数据列完整性
     headers = data[0]
     required_columns = ['date', 'weather']
@@ -273,24 +261,14 @@ def classify():
     print("\n欢迎使用智能天气数据分析工具")
     print("=" * 40)
 
-    choice = input("请选择分析模式 (1-指定日期范围, 2-全量数据): ")
+    # 验证日期顺序
+    if datetime.strptime(start_date, '%Y-%m-%d') > datetime.strptime(end_date, '%Y-%m-%d'):
+        print("错误：开始日期不能晚于结束日期！")
+        exit()
 
-    if choice == '1':
-        start_date = get_valid_date("请输入开始日期 (YYYY-MM-DD): ")
-        end_date = get_valid_date("请输入结束日期 (YYYY-MM-DD): ")
-
-        # 验证日期顺序
-        if datetime.strptime(start_date, '%Y-%m-%d') > datetime.strptime(end_date, '%Y-%m-%d'):
-            print("错误：开始日期不能晚于结束日期！")
-            exit()
-
-        weather_class = classify_weather(data, start_date, end_date)
-        title_suffix = f"({start_date}至{end_date})"
-    else:
-        weather_class = classify_weather(data)
-        start_date = "全部"
-        end_date = "数据"
-        title_suffix = ""
+    # 生成天气统计字典
+    weather_class = classify_weather(data, start_date, end_date)
+    title_suffix = f"({start_date}至{end_date})"
 
     # 打印统计表格
     print_weather_table(weather_class, start_date, end_date)
@@ -300,4 +278,4 @@ def classify():
     plot_bar_chart(weather_class, f"不同天气类型天数条形图{title_suffix}")
 
     print("数据处理和可视化完成！")
-    
+
